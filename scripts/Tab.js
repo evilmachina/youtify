@@ -24,6 +24,11 @@
                 self.view = $('#right .queue .info .queue');
                 self.paneView = $('#right .queue .pane.queue');
                 break;
+            case 'quicksearch':
+                self.view = $('#right .search .tabs .quicksearch.tracks');
+                self.paneView = $('#right .search .pane.quicksearch.tracks');
+                Search.quickSearchTab = self;
+                break;
             case 'youtube-videos':
                 self.view = $('#right .search .tabs .youtube.videos');
                 self.paneView = $('#right .search .pane.youtube.videos');

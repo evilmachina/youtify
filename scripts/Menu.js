@@ -122,7 +122,7 @@ function MenuItem(type) {
                 self.addTabs(['flattr-toplist', 'youtube-top100']);
 
                 // Init YouTube top 100
-                $pane = $('#right .pane.youtube.top100');
+                $pane = $('#right .pane.youtube.top100.list');
                 $.each(youtubeTopList, function (i, item) {
                     new Video({
                         videoId: item.videoId,
@@ -133,7 +133,7 @@ function MenuItem(type) {
                 });
 
                 // Init Flattr Toplist
-                $pane = $('#right .pane.flattr');
+                $pane = $('#right .pane.flattr.list');
                 $.each(flattrTopList, function (i, item) {
                     new Video({
                         videoId: item.videoId,

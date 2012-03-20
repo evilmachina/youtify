@@ -177,7 +177,7 @@
                     <div id="officialfm" class="officialfm"></div>
                     <div id="soundcloud" class="soundcloud"></div>
                     <div id="youtube" class="youtube"></div>
-				</div>
+                </div>
             </div>
         </div>
         
@@ -185,29 +185,35 @@
             <div id="right">
                 <div class="search">
                     <ul class="tabs">
-                        <li class="youtube videos" rel=".youtube.videos.pane" class="active">YouTube</li>
-                        <li class="soundcloud tracks" rel=".soundcloud.playlists.pane">SoundCloud</li>
-                        <li class="officialfm tracks" rel=".officialfm.playlists.pane">Official.fm</li>
+                        <li class="quicksearch tracks" rel=".quicksearch.tracks.pane" class="active">QuickSearch</li>
+                        <li class="youtube videos" rel=".youtube.videos.pane.tracklist">YouTube</li>
+                        <li class="soundcloud tracks" rel=".soundcloud.tracks.pane.tracklist">SoundCloud</li>
+                        <li class="officialfm tracks" rel=".officialfm.tracks.pane.tracklist">Official.fm</li>
                     </ul>
-                    <table class="youtube videos pane"></table>
-                    <table class="soundcloud tracks pane"></table>
-                    <table class="officialfm tracks pane"></table>
+                    <div class="quicksearch pane">
+                        <table class="tracklist tracks all"></table>
+                        <ul class="related-tags"></ul>
+                        <table class="tracklist videos related"></table>
+                    </div>
+                    <table class="youtube videos pane tracklist"></table>
+                    <table class="soundcloud tracks pane tracklist"></table>
+                    <table class="officialfm tracks pane tracklist"></table>
                 </div>
                 
                 <div class="toplists">
                     <ul class="tabs">
-                        <li class="flattr" rel=".flattr">Most Flattred</li>
-                        <li class="youtube top100" rel=".youtube.top100.pane">YouTube Top 100</li>
+                        <li class="flattr" rel=".flattr.pane.tracklist">Most Flattred</li>
+                        <li class="youtube top100" rel=".youtube.top100.pane.tracklist">YouTube Top 100</li>
                     </ul>
-                    <table class="flattr pane"></table>
-                    <table class="youtube top100 pane"></table>
+                    <table class="flattr pane tracklist"></table>
+                    <table class="youtube top100 pane tracklist"></table>
                 </div>
                 
                 <div class="queue">
                     <div class="info">
                         <span class="queue" class="title translatable">Play Queue</span>
                     </div>
-                    <table class="queue pane"></table>
+                    <table class="queue pane tracklist"></table>
                 </div>
                 
                 <div class="playlists">

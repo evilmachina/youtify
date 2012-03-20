@@ -1,6 +1,7 @@
 ﻿
 var Search = {
     menuItem: null,
+    quickSearchTab: null,
     youtubeVideosTab: null,
     soundCloudTracksTab: null,
     officialfmTracksTab: null,
@@ -46,6 +47,9 @@ var Search = {
         });
     },
     getType: function() {
+        if (Search.quickSearchTab.isSelected()) {
+            return 'quicksearch';
+        }
         if (Search.soundCloudTracksTab.isSelected()) {
             return 'soundcloud-tracks';
         }
@@ -69,6 +73,8 @@ var Search = {
         Search.currentQuery = q;
 
         switch(Search.getType()) {
+            case 'quicksearch':
+                break;
             case 'youtube-videos':
                 if (Search.lastVideosSearchQuery === q && !loadMore) {
                     return;
