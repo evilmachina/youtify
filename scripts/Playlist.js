@@ -15,6 +15,7 @@ function loadPlaylist(playlistId) {
                 var playlist = new Playlist(data.title, data.videos, data.remoteId, data.owner, data.isPrivate, data.followers);
                 playlist.createViews();
                 PlaylistView.loadPlaylistView(playlist);
+                playlistManager.selectPlaylistByRemoteId(data.remoteId);
             },
             404: function(data) {
                 alert("No such playlist found");
@@ -81,11 +82,7 @@ function Playlist(title, videos, remoteId, owner, isPrivate, followers) {
     };
 
     self.getUrl = function() {
-        if (self.owner.nickname) {
-            return location.protocol + '//' + location.host + '/users/' + self.owner.nickname + '/playlists/' + self.remoteId;
-        } else {
-            return location.protocol + '//' + location.host + '/users/' + self.owner.id + '/playlists/' + self.remoteId;
-        }
+        return self.owner.getUrl() + '/playlists/' + self.remoteId;
     };
 
     self.copy = function() {
@@ -386,16 +383,17 @@ function Playlist(title, videos, remoteId, owner, isPrivate, followers) {
 		return deleted;
 	};
 
+    self.goTo = function() {
+        history.pushState(null, null, self.owner.getUrl() + '/playlists/' + self.remoteId);
+        Menu.deSelectAll();
+        loadPlaylist(self.remoteId);
+    };
+
     self.getSmallView = function() {
         var $playlist = $('<span class="playlist link"></span>');
 
         $playlist.text(self.title);
-
-        $playlist.click(function() {
-            history.pushState(null, null, self.owner.getUrl() + '/playlists/' + self.remoteId);
-            Menu.deSelectAll();
-            loadPlaylist(self.remoteId);
-        });
+        $playlist.click(self.goTo);
 
         return $playlist;
     };

@@ -5,9 +5,7 @@ var mousedown = false,
     mousedrag = false,
     sourceElem = null, // the REAL dragged element
     dragElem = null, // dragged element copy
-    timeOfMouseDown = null,
     dropCallbacks = [],
-    MOUSE_DRAG_TIMEOUT = 100, // Milliseconds until drag kicks in
     mouseDraggedCallback = null;
 
 function registerDropCallback(f) {
@@ -64,10 +62,8 @@ function dragEnded(event) {
 
     removeTargetClasses();
 
-    if (dragElem) { // todo: fix, dragElem should always exist?
-        dragElem.remove();
-        dragElem = null;
-    }
+    dragElem.remove();
+    dragElem = null;
 }
 
 /**
@@ -109,10 +105,6 @@ function mouseDragged(event) {
     var target = $(event.target);
     var droppable = findDroppable(target);
 
-    if (!dragElem) { // really needed?
-        return;
-    }
-
     dragElem.css({
         'top': event.pageY,
         'left': event.pageX + 10
@@ -125,6 +117,9 @@ function mouseDragged(event) {
     }
 
     if (droppable) {
+        if (droppable.hasClass('playlists')) {
+            droppable.find('.tracklist.active .video:last').addClass('insert-after');
+        }
         if (sourceElem.data('type') !== undefined) {
             if (droppable.data('type') !== sourceElem.data('type')) {
                 droppable.addClass('target');
@@ -141,11 +136,8 @@ function mouseDragged(event) {
 
 $(window).mousemove(function (event) {
     if (!mousedrag && mousedown && ($(event.target).hasClass('draggable') || $(event.target).parents('.draggable').length > 0)) {
-        var now = new Date().getTime();
-        if ((now - timeOfMouseDown) >= MOUSE_DRAG_TIMEOUT) {
-            mousedrag = true;
-            dragStarted(event);
-        }
+        mousedrag = true;
+        dragStarted(event);
     }
     
     if (mousedrag) {
@@ -165,7 +157,6 @@ $(window).mouseup(function (event) {
 
 
 $('.draggable').live('mousedown', function (event) {
-    timeOfMouseDown = new Date().getTime();
     if ($(event.target).hasClass('draggable') || 
 		$(event.target).parents('.draggable') ) {
         mousedown = true;
@@ -191,23 +182,28 @@ mouseDraggedCallback = function(targetElem, sourceElem) {
 
 // VIDEO DROPPED ON #results-container
 registerDropCallback(function (dragElem, sourceElem, targetElem) {
-    var playlistElem,
-        destIndex,
+    var destIndex,
         sourceIndex,
-        playlist;
+        playlist,
+        lastVideo,
+        selectedVideos;
 
-    if ($('#playlists .selected').length) {
-        playlistElem = $('.playlistElem.selected');
-        if (targetElem.attr('id') === 'results-container' && sourceElem.hasClass('video') && playlistElem.length) {
-            sourceIndex = sourceElem.index();
-            destIndex = $('#results-container .results.active .video:last').index() + 1;
+    if (targetElem.hasClass('playlists') && sourceElem.hasClass('video')) {
+        playlist = playlistManager.getCurrentlySelectedPlaylist();
+        selectedVideos = sourceElem.parent().find('.video.selected');
 
-            playlist = playlistElem.data('model');
-            playlist.moveVideo(sourceIndex, destIndex);
-            playlistManager.save();
+        lastVideo = playlist.playlistDOMHandle.find('.video:last');
+        sourceIndex = sourceElem.index();
+        destIndex = lastVideo.index();
 
-            playlistElem.click(); // trigger a rerender
-        }
+        $.each(selectedVideos, function(index, elem) {
+            if (playlist !== undefined) { // hack to not crash when dragging videos on profile pages
+                playlist.moveVideo(sourceIndex, destIndex+1);
+                $(elem).detach().appendTo(playlist.playlistDOMHandle);
+            }
+        });
+
+        playlistManager.save();
     }
 });
 

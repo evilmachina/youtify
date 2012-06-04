@@ -41,10 +41,22 @@ function User(args) {
     };
 
     self.getUrl = function() {
+        var ret = location.protocol + '//' + location.host + '/';
         if (this.nickname) {
-            return '/users/' + this.nickname;
+            ret += this.nickname;
         } else {
-            return '/users/' + this.id;
+            ret += 'users/' + this.id;
+        }
+        return ret;
+    };
+
+    self.goTo = function() {
+        history.pushState(null, null, self.getUrl());
+        UserManager.doFakeProfileMenuClick();
+        if (logged_in && self.id === UserManager.currentUser.id) {
+            UserManager.loadCurrentUser();
+        } else {
+            UserManager.loadProfile(self.id);
         }
     };
 
@@ -54,15 +66,7 @@ function User(args) {
         $('<img />').attr('src', self.smallImageUrl).appendTo($user);
         $('<span class="name"></span>').text(self.displayName).appendTo($user);
 
-        $user.click(function() {
-            history.pushState(null, null, self.getUrl());
-            UserManager.doFakeProfileMenuClick();
-            if (logged_in && self.id === UserManager.currentUser.id) {
-                UserManager.loadCurrentUser();
-            } else {
-                UserManager.loadProfile(self.id);
-            }
-        });
+        $user.click(self.goTo);
 
         return $user;
     };

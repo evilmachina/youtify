@@ -9,7 +9,35 @@ from model import YoutifyUser
 from model import FollowRelation
 from model import get_activities_structs
 from model import get_display_name_for_youtify_user_model
+from model import get_settings_struct_for_youtify_user_model
 from activities import create_follow_activity
+from mail import send_new_follower_email
+
+BLOCKED_NICKNAMES = [
+    'admin',
+    'stats',
+    'import',
+    'export',
+    'translations',
+    'settings',
+    'preferences',
+    'yourbrowsersucks',
+    'yourdecisionrocks',
+    'me',
+    'news',
+    'feed',
+    'newsfeed',
+    'activities',
+    'toplist',
+    'queue',
+    'search',
+    'users',
+    'playlists',
+    'api',
+    'about',
+    'support',
+    'faq',
+]
 
 class ProfileHandler(webapp.RequestHandler):
     def get(self):
@@ -24,9 +52,14 @@ class ProfileHandler(webapp.RequestHandler):
         last_name = self.request.get('last_name', user.first_name)
         tagline = self.request.get('tagline', user.tagline)
 
-        if nickname and not re.match('^[A-Za-z0-9_]{4,36}$', nickname):
+        if nickname and not re.match('^[A-Za-z0-9_]{1,36}$', nickname):
             self.error(400)
-            self.response.out.write('Nickname must be 4-36 alphanumerical characters (no whitespace)')
+            self.response.out.write('Nickname must be 1-36 alphanumerical characters (no whitespace)')
+            return
+
+        if nickname and nickname in BLOCKED_NICKNAMES:
+            self.error(400)
+            self.response.out.write('That nickname is not allowed.')
             return
 
         for u in YoutifyUser.all().filter('nickname_lower = ', nickname.lower()):
@@ -45,6 +78,21 @@ class ProfileHandler(webapp.RequestHandler):
 
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write(get_display_name_for_youtify_user_model(user))
+
+class SettingsHandler(webapp.RequestHandler):
+    
+    def get(self):
+        user = get_current_youtify_user_model()
+        settings = get_settings_struct_for_youtify_user_model(user)
+        self.response.out.write(simplejson.dumps(settings))
+
+    def post(self):
+        user = get_current_youtify_user_model()
+        user.send_new_follower_email = self.request.get('send_new_follower_email') == 'true'
+        user.send_new_subscriber_email = self.request.get('send_new_subscriber_email') == 'true'
+        user.save()
+        settings = get_settings_struct_for_youtify_user_model(user)
+        self.response.out.write(simplejson.dumps(settings))
 
 class FollowingsHandler(webapp.RequestHandler):
 
@@ -99,6 +147,7 @@ class FollowingsHandler(webapp.RequestHandler):
         m.put()
 
         create_follow_activity(me, other_user)
+        send_new_follower_email(me, other_user)
 
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write('ok')
@@ -131,6 +180,7 @@ def main():
     application = webapp.WSGIApplication([
         ('/me/youtube_username', YouTubeUserNameHandler),
         ('/me/profile', ProfileHandler),
+        ('/me/settings', SettingsHandler),
         ('/me/activities', ActivitiesHandler),
         ('/me/followings/(.*)', FollowingsHandler),
     ], debug=True)

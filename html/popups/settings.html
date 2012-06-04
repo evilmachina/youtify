@@ -1,4 +1,7 @@
 <div id="settings" style="display:none" class="popup">
+    <div class="puffs" style="display:none">
+        <a class="puff chrome-webstore translatable" href="#" target="_blank">Install Youtify from the Chrome Web Store</a>
+    </div>
     <div class="language">
         <h2 class="translatable">Language</h2>
         <select>
@@ -6,12 +9,24 @@
                 <option value="{{ lang.code }}">{{ lang.label }}</option>
             {% endfor %}
         </select>
-        <a href="/translations">Help out with translations</a>
+        <a class="translatable" href="/translations">Help out with translations</a>
     </div>
     {% if logged_in %}
-    <div class="flattr">
-        <h2>Flattr</h2>
-        <div class="content">
+    <div class="connections">
+        <h2 class="translatable">Connections</h2>
+        <div class="connection flattr">
+        </div>
+    </div>
+    <div class="notifications">
+        <h2 class="translatable">Notifications</h2>
+        <p class="translatable">Email me when:</p>
+        <div class="toggle">
+            <input type="checkbox" name="send_new_follower_email" />
+            <span class="translatable">I'm followed by someone new</span>
+        </div>
+        <div class="toggle">
+            <input type="checkbox" name="send_new_subscriber_email" />
+            <span class="translatable">My playlists are subscribed to</span>
         </div>
     </div>
     {% endif %}
@@ -21,11 +36,5 @@
         <label id="qualityLowSpan" for="qualityLowRadio" class="translatable">Low</label>
         <input id="qualityHighRadio" type="radio" name="quality" value="High" />
         <label id="qualityHighSpan" for="qualityHighRadio" class="translatable">High</label>
-    </div>
-    <div class="notifications">
-        <h2 class="translatable">Notifications</h2>
-        <p class="translatable">Hide after:</p>
-        <input id="notificationRange" type="range" min="1" max="20" step="1" value="3" />
-        <span id="notificationRangeText">3</span>&nbsp;<span class="translatable">seconds</span>
     </div>
 </div>

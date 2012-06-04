@@ -228,28 +228,30 @@ input, textarea, button {
     height: 32px;
     line-height: 32px;
 }
-#top .webstore {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    position: relative;
-    top: 3px;
-    background: url(/images/chrome_16.png);
+#settings .puffs .chrome-webstore {
+    padding-left: 20px;
+    background: url(/images/chrome_16.png) no-repeat left center;
+}
+#top .settings .counter {
+    background: rgba(0, 124, 137, 0.4);
+    color: white;
+    border-radius: 4px;
+    padding: 0 4px;
+    font-size: 10px;
+    font-weight: bold;
+    vertical-align: top;
 }
 #top .settings,
 #top .about {
-    margin: 0 10px;
-}
-#top .username,
-#top .about,
-#top .webstore,
-#top .settings {
+    margin-right: 10px;
     cursor: pointer;
     text-transform: uppercase;
     font-size: 13px;
     text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.8);
+    display: inline;
 }
-#top .menu .login-link {
+#top .menu .login-link,
+#top .menu .logout-link {
     cursor: pointer;
     font-size: 13px;
     text-transform: uppercase;
@@ -262,10 +264,12 @@ input, textarea, button {
     border-radius: 10px 0 0 10px;
     background: rgba(0, 124, 137, 0.2);
 }
-#top .menu .login-link:hover {
+#top .menu .login-link:hover,
+#top .menu .logout-link:hover {
     background: rgba(0, 124, 137, 0.4);
 }
-#top .menu .login-link:after {
+#top .menu .login-link:after,
+#top .menu .logout-link:after {
     content: '';
     cursor: default;
     position: absolute;
@@ -674,7 +678,6 @@ input, textarea, button {
 }
 #right .info .privacy {
     display: inline;
-    max-width: 70px;
     float: right;
     line-height: 26px;
     padding: 0 0 0 10px;
@@ -1131,19 +1134,18 @@ input, textarea, button {
     z-index: 25;
     cursor: default;
 }
-.target {
-    background-color: rgba(0, 124, 137, 0.4);
-    cursor: default;
+#right .playlists.target {
+    background: inherit;
 }
 .reorderable {
 }
 .results > .insert-before,
 #playlists > .insert-before {
-    border-top: 1px solid blue;
+    border-top: 1px solid black;
 }
 .insert-after,
 .insert-after {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid black;
 }
 
 /** POPUP
@@ -1223,8 +1225,17 @@ input, textarea, button {
 #settings .language a {
     display: block;
 }
-#settings .flattr .disconnect {
-    display: block;
+#settings .connections .connection {
+    line-height: 16px;
+}
+#settings .connections .connection .title {
+    padding-left: 20px;
+}
+#settings .connections .flattr {
+    background: url(/images/flattr_16.png) no-repeat center left;
+}
+#settings .connections .button {
+    float: right;
 }
 
 /** ABOUT POPUP
@@ -1302,9 +1313,11 @@ input, textarea, button {
 /** SHARE PLAYLIST POPUP
  ****************************************************************************/
 
-#share-playlist-popup input {
+#share-playlist-popup input,
+#share-video-popup input {
     width: 100%;
     margin-bottom: 4px;
+    font-size: 12px;
 }
 
 /** SPOTIFY IMPORTER POPUP
@@ -1468,14 +1481,6 @@ input, textarea, button {
 }
 .modalbox .buttons button:last-child {
     margin-right: 0;
-}
-
-/** CHROME WEB STORE POPUP
- ****************************************************************************/
-
-#webstore-popup a {
-    display: block;
-    margin-top: 10px;
 }
 
 /** FLATTR

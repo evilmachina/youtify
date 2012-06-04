@@ -1,6 +1,7 @@
 import os
 import random
 import re
+from datetime import datetime
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -14,6 +15,7 @@ from model import get_youtify_user_struct
 from model import get_followers_for_youtify_user_model
 from model import get_followings_for_youtify_user_model
 from model import get_playlist_structs_for_youtify_user_model
+from model import get_settings_struct_for_youtify_user_model
 from languages import auto_detect_language
 from snapshots import get_deployed_translations_json
 from languages import get_languages
@@ -27,17 +29,28 @@ class MainHandler(webapp.RequestHandler):
         playlists_struct = []
         my_followers_struct = []
         my_followings_struct = []
+        settings_struct = {}
 
         if (current_user is not None) and (youtify_user_model is None):
             youtify_user_model = create_youtify_user_model()
 
         if youtify_user_model is not None:
             youtify_user_model.device = str(random.random())
+            youtify_user_model.last_login = datetime.now()
+
+            # https://developers.google.com/appengine/docs/python/runtime#Request_Headers
+            youtify_user_model.country = self.request.headers.get('X-AppEngine-Country', None)
+            youtify_user_model.reqion = self.request.headers.get('X-AppEngine-Region', None)
+            youtify_user_model.city = self.request.headers.get('X-AppEngine-City', None)
+            youtify_user_model.latlon = self.request.headers.get('X-AppEngine-CityLatLong', None)
+
             youtify_user_model.save()
+
             youtify_user_struct = get_youtify_user_struct(youtify_user_model, include_private_data=True)
             playlists_struct = get_playlist_structs_for_youtify_user_model(youtify_user_model, include_private_playlists=True)
             my_followers_struct = get_followers_for_youtify_user_model(youtify_user_model)
             my_followings_struct = get_followings_for_youtify_user_model(youtify_user_model)
+            settings_struct = get_settings_struct_for_youtify_user_model(youtify_user_model)
 
         ON_PRODUCTION = os.environ['SERVER_SOFTWARE'].startswith('Google App Engine') # http://stackoverflow.com/questions/1916579/in-python-how-can-i-test-if-im-in-google-app-engine-sdk
         
@@ -61,6 +74,7 @@ class MainHandler(webapp.RequestHandler):
             'playlistsFromServer': simplejson.dumps(playlists_struct),
             'myFollowers': simplejson.dumps(my_followers_struct),
             'myFollowings': simplejson.dumps(my_followings_struct),
+            'settingsFromServer': simplejson.dumps(settings_struct),
             'autoDetectedLanguageByServer': lang,
             'autoDetectedTranslations': get_deployed_translations_json(lang),
             'logged_in': int(current_user is not None),

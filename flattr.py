@@ -115,6 +115,7 @@ class BackHandler(webapp.RequestHandler):
 
         data = simplejson.dumps({
             'code': code,
+            'redirect_uri': config.REDIRECT_URL,
             'grant_type': 'authorization_code',
         })
 
@@ -139,6 +140,8 @@ class BackHandler(webapp.RequestHandler):
         else:
             self.response.headers['Content-Type'] = 'text/plain'
             self.response.out.write('Flattr connection failed')
+            self.response.out.write('\n\n')
+            self.response.out.write(str(response))
 
 def main():
     application = webapp.WSGIApplication([

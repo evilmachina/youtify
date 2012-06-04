@@ -14,54 +14,57 @@ error_handlers:
 
 handlers:
 
-- url: /migrations.*
+- url: /admin/import_old_translations
+  script: import_old_translations.py
+  login: admin
+
+- url: /admin/migrations/.*
   script: migrations.py
   login: admin
 
-- url: /fakesetup
+- url: /admin/minimizer
+  script: minimizer.py
+  login: admin
+
+- url: /admin/fakesetup
   script: fakesetup.py
   login: admin
 
-- url: /me.*
+- url: /admin/filter
+  static_files: html/filter.html
+  upload: html/filter.html
+  login: admin
+
+- url: /admin/pinggraph
+  script: ping.py
+  login: admin
+
+- url: /admin
+  script: admin.py
+  login: admin
+
+- url: /admin/.*
+  script: admin.py
+  login: admin
+
+- url: /stats
+  script: stats.py
+
+- url: /me/.*
   script: me.py
 
 - url: /api/users.*
   script: users.py
-
-- url: /export
-  static_files: html/export.html
-  upload: html/export.html
-  expiration: "1d"
-
-- url: /import
-  static_files: html/import.html
-  upload: html/import.html
-  expiration: "1d"
 
 - url: /about
   static_files: html/popups/about.html
   upload: html/popups/about.html
   #expiration: "1d"
 
-- url: /test.*
-  script: gaeunit.py
-  login: admin
+- url: /yourbrowsersucks
+  script: sucks.py
 
-- url: /jstests
-  static_files: html/tests.html
-  upload: html/tests.html
-  login: admin
-
-- url: /filter
-  static_files: html/filter.html
-  upload: html/filter.html
-  login: admin
-
-- url: /minimizer
-  script: minimizer.py
-  login: admin
-
-- url: /your.*
+- url: /yourdecisionrocks
   script: sucks.py
 
 - url: /cron/generate_youtube_toplist.*
@@ -70,6 +73,10 @@ handlers:
 
 - url: /cron/generate_flattr_toplist.*
   script: flattr_toplist.py
+  login: admin
+
+- url: /cron/gather_stats
+  script: stats.py
   login: admin
 
 - url: /flattr_submit.*
@@ -88,11 +95,7 @@ handlers:
   script: ping.py
   login: admin
 
-- url: /pinggraph
-  script: ping.py
-  login: admin
-
-- url: /ping.*
+- url: /ping
   script: ping.py
 
 - url: /scripts
@@ -105,29 +108,39 @@ handlers:
   static_dir: images
   expiration: "1d"
 
-- url: /import_old_translations
-  script: import_old_translations.py
-  login: admin
-
-- url: /admin.*
-  script: admin.py
-  login: admin
-
-- url: /translations.*
+- url: /translations
   script: translations.py
   login: required
 
-- url: /phrases.*
+- url: /translations/.*
+  script: translations.py
+  login: required
+
+- url: /phrases
   script: phrases.py
 
-- url: /languages.*
+- url: /phrases/.*
+  script: phrases.py
+
+- url: /languages
   script: languages.py
 
-- url: /snapshots.*
+- url: /languages/.*
+  script: languages.py
+
+- url: /snapshots
+  script: snapshots.py
+
+- url: /snapshots/.*
   script: snapshots.py
 
 - url: /api/translations/.*
   script: snapshots.py
+
+- url: /youtify.webapp
+  static_files: youtify.webapp
+  mime_type: application/x-web-app-manifest+json
+  upload: youtify.webapp
   
 - url: /robots.*
   static_files: robots.txt
@@ -137,6 +150,9 @@ handlers:
 - url: /flattr.*
   script: flattr.py
   login: required
+
+- url: /unsubscribe
+  script: mail.py
 
 - url: /.*
   script: main.py

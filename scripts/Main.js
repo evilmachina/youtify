@@ -68,8 +68,6 @@ var initEverymote = function(player){
 
 
 $(document).ready(function() {
-    var settings = new Settings();
-	
     EventSystem.init();
     Menu.init();
 
@@ -84,7 +82,6 @@ $(document).ready(function() {
     Queue.init();
     Ping.init();
     Notifications.init();
-    ChromeWebStore.init();
     player = new PlayerManager();
     player.init();
     Timeline.init();
@@ -92,7 +89,6 @@ $(document).ready(function() {
     VideoInfo.init();
     FlattrFinder.init();
     BottomPanel.init();
-    Window.init();
     UserManager.init(USER);
     TopMenu.init();
     URIManager.init();

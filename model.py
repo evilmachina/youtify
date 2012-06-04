@@ -9,6 +9,7 @@ from google.appengine.api import users
 
 class YoutifyUser(search.SearchableModel):
     created = db.DateTimeProperty(auto_now_add=True)
+    last_login = db.DateTimeProperty()
     google_user = db.UserProperty()
     google_user2 = db.UserProperty()
     device = db.StringProperty()
@@ -26,6 +27,15 @@ class YoutifyUser(search.SearchableModel):
     nr_of_followers = db.IntegerProperty(default=0)
     nr_of_followings = db.IntegerProperty(default=0)
     migrated_playlists = db.BooleanProperty(default=False)
+
+    last_emailed = db.DateTimeProperty()
+    send_new_follower_email = db.BooleanProperty(default=True)
+    send_new_subscriber_email = db.BooleanProperty(default=True)
+
+    region = db.StringProperty()
+    country = db.StringProperty()
+    city = db.StringProperty()
+    latlon = db.StringProperty()
 
     @classmethod
     def SearchableProperties(cls):
@@ -112,6 +122,16 @@ class FlattrClick(db.Model):
     thing_title = db.StringProperty()
     migrated = db.BooleanProperty(default=False)
 
+class Stats(db.Model):
+    date = db.DateTimeProperty(auto_now_add=True)
+    nr_of_users = db.IntegerProperty()
+    nr_of_active_users = db.IntegerProperty()
+    nr_of_playlists = db.IntegerProperty()
+    nr_of_users_with_flattr_account = db.IntegerProperty()
+    nr_of_flattrs = db.IntegerProperty()
+    nr_of_playlist_subscriptions = db.IntegerProperty()
+    nr_of_follow_relations = db.IntegerProperty()
+
 # HELPERS
 ##############################################################################
 
@@ -197,6 +217,11 @@ def get_display_name_for_youtify_user_model(youtify_user_model):
     else:
         return youtify_user_model.google_user.nickname().split('@')[0] # don't leak users email
 
+def get_url_for_youtify_user_model(youtify_user_model):
+    if youtify_user_model.nickname:
+        return 'http://www.youtify.com/' + youtify_user_model.nickname
+    return 'http://www.youtify.com/' + str(youtify_user_model.key().id())
+
 def get_playlist_structs_for_youtify_user_model(youtify_user_model, include_private_playlists=False):
     playlist_models = youtify_user_model.playlists
     playlist_structs = []
@@ -246,3 +271,9 @@ def get_activities_structs(youtify_user_model):
             'target': m.target,
         })
     return ret
+
+def get_settings_struct_for_youtify_user_model(youtify_user_model):
+    return {
+        'send_new_follower_email': youtify_user_model.send_new_follower_email,
+        'send_new_subscriber_email': youtify_user_model.send_new_subscriber_email
+    }

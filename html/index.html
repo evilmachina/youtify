@@ -2,7 +2,7 @@
  
 <html> 
 	<head> 
-        <title>Youtify - YouTube's music, all the time</title> 
+        <title>Youtify - The Web Music Player</title>
 
         <meta charset="utf-8"> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -63,6 +63,7 @@
             var USER = {{ USER }};
             var myFollowers = {{ myFollowers }};
             var myFollowings = {{ myFollowings }};
+            var settingsFromServer = {{ settingsFromServer }};
 
             var playlistsFromServer = {{ playlistsFromServer }};
             var flattrTopList = {{ flattrTopList }};
@@ -112,6 +113,7 @@
         <script src="/scripts/SpotifyImporter.js"></script>
         <script src="/scripts/SpotifyImporterPopup.js"></script>
         <script src="/scripts/WebStore.js"></script>
+        <script src="/scripts/NewsFeed.js"></script>
         <script src="/scripts/Menu.js"></script>
         <script src="/scripts/Tab.js"></script>
         <script src="/scripts/Timeline.js"></script>
@@ -120,7 +122,6 @@
         <script src="/scripts/FlattrFinder.js"></script>
         <script src="/scripts/VideoInfo.js"></script>
         <script src="/scripts/BottomPanel.js"></script>
-        <script src="/scripts/Window.js"></script>
         <script src="/scripts/TopMenu.js"></script>
         <script src="/scripts/User.js"></script>
         <script src="/scripts/UserManager.js"></script>
@@ -151,15 +152,13 @@
 	<body class="logged-out">
     {% endif %}
 	<body>
-        <div id="loading">Loading...</div>
+        <div id="loading" class="translatable">Loading...</div>
 
         {% include "./popups/spotify_importer.html" %}
         {% include "./popups/share_playlist.html" %}
         {% include "./popups/share_video.html" %}
         {% include "./popups/settings.html" %}
-        {% include "./popups/logout.html" %}
         {% include "./popups/videoinfo.html" %}
-        {% include "./popups/webstore.html" %}
         <div id="about-popup" style="display:none" class="popup"></div>
         
         <div id="top">
@@ -176,13 +175,17 @@
             <ul class="notifications"></ul>
             
             <div class="menu">
-                <span class="item webstore translatable" title="Install the Youtify Chrome App now"></span>
-                <span class="item about translatable">About</span>
-                <span class="item settings translatable">Settings</span>
+                <div class="item about">
+                    <span class="title translatable">About</span>
+                </div>
+                <div class="item settings translatable">
+                    <span class="title translatable">Settings</span>
+                    <span class="counter" style="display:none"></span>
+                </div>
                 {% if logged_in %}
-                <span class="item last username">Logout</span>
+                <a class="item last logout-link translatable" href="{{ logout_url }}">Logout</a>
                 {% else %}
-                <a class="item last login-link" href="{{ login_url }}">Login</a>
+                <a class="item last login-link translatable" href="{{ login_url }}">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -220,8 +223,8 @@
                         <li class="youtube videos" rel=".youtube.videos.pane" class="active">YouTube</li>
                         <li class="soundcloud tracks" rel=".soundcloud.playlists.pane">SoundCloud</li>
                         <li class="officialfm tracks" rel=".officialfm.playlists.pane">Official.fm</li>
-                        <li class="youtify users" rel=".youtify.users.pane">Users</li>
-                        <li class="youtify playlists" rel=".youtify.playlists.pane">Playlists</li>
+                        <li class="youtify users translatable" rel=".youtify.users.pane">Users</li>
+                        <li class="youtify playlists translatable" rel=".youtify.playlists.pane">Playlists</li>
                     </ul>
                     <table class="youtube videos pane tracklist"></table>
                     <table class="soundcloud tracks pane tracklist"></table>
@@ -250,7 +253,7 @@
                     <table class="queue pane tracklist"></table>
                 </div>
                 
-                <div class="playlists">
+                <div class="playlists droppable">
                     <div class="info">
                         <span class="title"></span>
                         <span class="privacy"><input type="checkbox" /><label class="translatable">Public</label></span>
@@ -264,15 +267,14 @@
                 <div class="profile">
                     <div class="picture-container">
                         <div class="change">
-                            <span class="translatable">Configure your profile picture for <span class="email"></span> at </span><a href="http://www.gravatar.com" target="_blank">gravatar.com</a>
                         </div>
                     </div>
                     <div class="information-container">
                         <div class="display-name-container">
                             <span class="display-name"></span>
-                            <button class="follow button">Follow</button>
-                            <button class="unfollow button">Unfollow</button>
-                            <button class="edit button">Edit</button>
+                            <button class="follow button translatable">Follow</button>
+                            <button class="unfollow button translatable">Unfollow</button>
+                            <button class="edit button translatable">Edit</button>
                         </div>
                         <span class="nickname"></span>
                         <a class="flattr-user-name link" target="_blank" href="#"></a>

@@ -176,6 +176,13 @@ function PlaylistsManager() {
         this.playlists.splice(index, 1);
     };
 
+    this.selectPlaylistByRemoteId = function(remoteId) {
+        var map = this.getPlaylistsMap();
+        if (map.hasOwnProperty(remoteId)) {
+            map[remoteId].leftMenuDOMHandle.mousedown();
+        }
+    };
+
     this.load();
 }
 
