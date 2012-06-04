@@ -16,6 +16,57 @@ $(document).ajaxError(function (e, r, ajaxOptions, thrownError) {
     }
 });
 
+var initEverymote = function(player){
+    console.log(everymote);
+
+    var callbackHandler = function(data){
+
+        if(data.event === 'next'){
+            player.next();
+        }else if(data.event === 'previous'){
+            player.prev();
+        }else if(data.event === 'pause'){
+            player.pause();
+        }else if(data.event === 'play'){
+            if(player.isPlaying){return;}
+            
+            player.playPause();
+        }
+    };
+    
+    var config = {
+                    container: "everymoteContainer"
+                    ,url:'http://localhost:1338/predefined/simplemedia.html'
+                    ,callback: callbackHandler
+                    };
+    everymote.mediaController.init(config);
+
+    var receiver = function(ev) {
+        
+
+        if(ev.data.event === "titleUpdated"){
+            everymote.mediaController.nowPlaying(ev.data.title);
+        } else if(ev.data.event === "playPause"){
+            if(ev.data.playPause === 'pause'){
+                everymote.mediaController.pause();
+            } else{
+                 everymote.mediaController.play();
+            }
+        } 
+
+   
+    };
+
+    
+        if(window.addEventListener){
+            window.addEventListener('message', receiver, false);
+        } else{
+            window.attachEvent('onmessage', receiver);
+        }
+    
+};
+
+
 $(document).ready(function() {
     var settings = new Settings();
 	
@@ -45,7 +96,10 @@ $(document).ready(function() {
     UserManager.init(USER);
     TopMenu.init();
     URIManager.init();
+    initEverymote(player);
 });
+
+
 
 function onYouTubePlayerAPIReady() {
     youTubeApiReady = true;

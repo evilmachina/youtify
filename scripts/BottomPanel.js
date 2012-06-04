@@ -29,5 +29,7 @@ var BottomPanel = {
         $('#bottom .info .title .text')
             .text(titleText)
             .attr('title', titleText);
+         var message = {event:'titleUpdated', title:titleText};
+         window.postMessage(message,"*");
     }
 };

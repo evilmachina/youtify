@@ -167,11 +167,16 @@ function PlayerManager() {
             console.log("Player.playPause(): currentPlayer or currentVideo is null");
             return;
         } else {
+            var message = {event:'playPause'};
             if (self.isPlaying) {
                 self.pause();
+                message.playPause = 'pause';
             } else {
                 self.play();
+                message.playPause = 'play';
             }
+            
+            window.postMessage(message,"*");
         }
     };
     
