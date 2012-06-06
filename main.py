@@ -52,7 +52,7 @@ class MainHandler(webapp.RequestHandler):
             my_followings_struct = get_followings_for_youtify_user_model(youtify_user_model)
             settings_struct = get_settings_struct_for_youtify_user_model(youtify_user_model)
 
-        ON_PRODUCTION = os.environ['SERVER_SOFTWARE'].startswith('Google App Engine') # http://stackoverflow.com/questions/1916579/in-python-how-can-i-test-if-im-in-google-app-engine-sdk
+        ON_PRODUCTION = False #os.environ['SERVER_SOFTWARE'].startswith('dGoogle App Engine') # http://stackoverflow.com/questions/1916579/in-python-how-can-i-test-if-im-in-google-app-engine-sdk
         
         # Find videotag and generate open graph meta tags
         match = re.compile(r'tracks/youtube/(.*)').search(self.request.url)

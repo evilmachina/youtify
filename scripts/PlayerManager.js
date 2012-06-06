@@ -55,6 +55,9 @@ function PlayerManager() {
         if (self.currentPlayer) {
             self.currentVideoLength = self.currentPlayer.getTotalPlaybackTime();
         }
+        var message = {event:'playPause'};
+          message.playPause = 'play';
+          window.postMessage(message,"*");
     };
     
     /* Start (or if video is null resume) playback of a video */
@@ -135,6 +138,7 @@ function PlayerManager() {
         } else {
             backendPlayer.fullScreenOff();
         }
+
     };
     
     /* Update the view and internal state for pause */
@@ -148,6 +152,9 @@ function PlayerManager() {
             $('body').removeClass('playing');
             $('body').addClass('paused');
         }
+          var message = {event:'playPause'};
+          message.playPause = 'pause';
+          window.postMessage(message,"*");
     };
     
     /* Pauses the current video */
@@ -167,16 +174,14 @@ function PlayerManager() {
             console.log("Player.playPause(): currentPlayer or currentVideo is null");
             return;
         } else {
-            var message = {event:'playPause'};
+           
             if (self.isPlaying) {
                 self.pause();
-                message.playPause = 'pause';
             } else {
                 self.play();
-                message.playPause = 'play';
             }
             
-            window.postMessage(message,"*");
+            
         }
     };
     

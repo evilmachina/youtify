@@ -36,7 +36,7 @@ var initEverymote = function(player){
     
     var config = {
                     container: "everymoteContainer"
-                    ,url:'http://localhost:1338/predefined/simplemedia.html'
+                    //,url:'http://localhost:1338/predefined/simplemedia.html'
                     ,callback: callbackHandler
                     };
     everymote.mediaController.init(config);
