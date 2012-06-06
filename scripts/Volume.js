@@ -41,12 +41,14 @@ var Volume = {
         if (mX > maxW) {
             mX = maxW;
         }
-
+        
+        
         player.setVolume(mX/maxW*100.0);
 
         if (mX < paddingLeft) {
             mX = paddingLeft;
         }
         $('#bottom .volume .slider').css({'width': mX});
+
     }
 };

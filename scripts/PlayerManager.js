@@ -272,6 +272,11 @@ function PlayerManager() {
                 self.players[i].setVolume(volume);
             }
         }
+        
+        var message = {event:'volume_changed'
+                       ,value:volume};
+        
+        window.postMessage(message,"*");
     };
     
     /* Get volume (0-100) */

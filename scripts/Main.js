@@ -17,7 +17,7 @@ $(document).ajaxError(function (e, r, ajaxOptions, thrownError) {
 });
 
 var initEverymote = function(player){
-    console.log(everymote);
+    
 
     var callbackHandler = function(data){
 
@@ -31,7 +31,13 @@ var initEverymote = function(player){
             if(player.isPlaying){return;}
             
             player.playPause();
+        }else if(data.event === 'volume'){
+            console.log(data);
+            player.setVolume(data.value);
+
+            $('#bottom .volume .slider').css({'width': data.value*1.3});
         }
+
     };
     
     var config = {
@@ -52,7 +58,9 @@ var initEverymote = function(player){
             } else{
                  everymote.mediaController.play();
             }
-        } 
+        } else if(ev.data.event === "volume_changed"){
+            everymote.mediaController.setVolume(ev.data.value);
+        }
 
    
     };
